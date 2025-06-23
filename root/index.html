@@ -74,15 +74,17 @@
       const times = SunCalc.getTimes(baseDate, latitude, longitude);
       const sunrise = times.sunrise;
 
-      const wakeUpTime = new Date(sunrise.getTime() - 2 * 60 * 60 * 1000); // 2 hrs before
-      const brahmaMuhurta = new Date(sunrise.getTime() - (1 * 60 + 36) * 60 * 1000); // 1hr 36min before
+      const wakeUpTime = new Date(sunrise.getTime() - 2 * 60 * 60 * 1000); // 2 hrs before sunrise
+      const brahmaMuhurtaStart = new Date(sunrise.getTime() - (1 * 60 + 36) * 60 * 1000); // 1hr 36min before sunrise
+      const brahmaMuhurtaEnd = new Date(brahmaMuhurtaStart.getTime() + 48 * 60 * 1000); // 48 mins after Brahma Muhurta start
 
       const li = document.createElement("li");
       li.innerHTML = `
         <strong>${formatDate(baseDate)}</strong><br>
         🌅 Sunrise: ${formatTime(sunrise)}<br>
         ⏰ Wake-up Time (2 hrs before): ${formatTime(wakeUpTime)}<br>
-        🕉️ Brahma Muhurta (1h 36m before): ${formatTime(brahmaMuhurta)}
+        🕉️ Brahma Muhurta Start (1h 36m before): ${formatTime(brahmaMuhurtaStart)}<br>
+        ⏳ Brahma Muhurta End (48 mins after start): ${formatTime(brahmaMuhurtaEnd)}
       `;
       list.appendChild(li);
     }
