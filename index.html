@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sunrise Tracker - Denton, TX</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .btn-group {
+      margin-bottom: 20px;
+    }
+    button {
+      margin-right: 10px;
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h2>Sunrise, Wake-Up & Brahma Muhurta – Denton, TX</h2>
+
+  <div class="btn-group">
+    <button onclick="showForDay(-1)">Yesterday</button>
+    <button onclick="showForDay(0)">Today</button>
+    <button onclick="showForDay(1)">Tomorrow</button>
+  </div>
+
+  <ul id="sunrise-list"></ul>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.8.0/suncalc.min.js"></script>
+  <script>
+    const latitude = 33.2148;
+    const longitude = -97.1331;
+
+    function formatTime(date) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function formatDate(date) {
+      return date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    function showForDay(offset) {
+      const list = document.getElementById("sunrise-list");
+      list.innerHTML = "";
+
+      const baseDate = new Date();
+      baseDate.setDate(baseDate.getDate() + offset);
+
+      const times = SunCalc.getTimes(baseDate, latitude, longitude);
+      const sunrise = times.sunrise;
+
+      const wakeUpTime = new Date(sunrise.getTime() - 2 * 60 * 60 * 1000); // 2 hrs before
+      const brahmaMuhurta = new Date(sunrise.getTime() - (1 * 60 + 36) * 60 * 1000); // 1hr 36min before
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${formatDate(baseDate)}</strong><br>
+        🌅 Sunrise: ${formatTime(sunrise)}<br>
+        ⏰ Wake-up Time (2 hrs before): ${formatTime(wakeUpTime)}<br>
+        🕉️ Brahma Muhurta (1h 36m before): ${formatTime(brahmaMuhurta)}
+      `;
+      list.appendChild(li);
+    }
+
+    // Show today by default
+    showForDay(0);
+  </script>
+</body>
+</html>
